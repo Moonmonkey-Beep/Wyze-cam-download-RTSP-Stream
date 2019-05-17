@@ -1,0 +1,29 @@
+
+
+on run
+	
+	-- Config Wyze cams here, get the url from the advanced section of the Wyze app in the RTSP section
+	set camURL1 to "rtsp://LOGIN:PASSWORD@192.168.0.33/live"
+	set camURL2 to "rtsp://LOGIN:PASSWORD@192.168.0.36/live"
+	
+	-- Name your cameras here, single world only
+	set camName1 to "Front"
+	set camName2 to "Back"
+	
+	-- Set recording length here HH:MM:SS
+	
+	set recLength to "00:00:06"
+	
+	-- End of cam config
+	
+	set {year:y, month:m, day:d} to (current date)
+	set CurrentTime to y & d & m & (time of (current date))
+	set myDocumentFolder to POSIX path of (path to documents folder as string)
+	set StreamLocation1 to quoted form of camURL1
+	set StreamLocation2 to quoted form of camURL2
+	
+	
+	do shell script "/usr/local/bin/ffmpeg -rtsp_transport tcp -i  " & StreamLocation1 & " -t " & recLength & " " & myDocumentFolder & "/" & camName1 & CurrentTime & ".mp4 | /usr/local/bin/ffmpeg -rtsp_transport tcp -i  " & StreamLocation2 & " -t " & recLength & " " & myDocumentFolder & "/" & camName2 & CurrentTime & ".mp4"
+	
+end run
+
